@@ -30,7 +30,7 @@
                 var r = new XMLHttpRequest();
                 var select;
                 
-                r.open("POST", "https://translate.yandex.net/api/v1.5/tr.json/getLangs?key=trnsl.1.1.20200511T090938Z.a2091658eab37745.cb2a304c184ba4f56f3f95c20f889db23f25b1a2&ui=en", true);
+                r.open("POST", "https://translate.yandex.net/api/v1.5/tr.json/getLangs?key=key&ui=en", true);
                 r.onreadystatechange = function () {
                     if (this.readyState == 4 && this.status == 200) {
                         var js = JSON.parse(this.responseText);
