@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+    <html lang="it">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Translate API</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <script>
+            function inverseLang(x) {
+                switch(x) {
+                    case "inputText":
+                        temp = inputText.linguaFrom.value;
+                        inputText.linguaFrom.value = inputText.linguaTo.value;
+                        inputText.linguaTo.value = temp;
+                        break;
+                    case "inputHTML":
+                        temp = inputHTML.linguaFrom.value;
+                        inputHTML.linguaFrom.value = inputHTML.linguaTo.value;
+                        inputHTML.linguaTo.value = temp;
+                        break;
+                    case "inputFile":
+                        temp = inputFile.linguaFrom.value;
+                        inputFile.linguaFrom.value = inputFile.linguaTo.value;
+                        inputFile.linguaTo.value = temp;
+                        break;
+                }
+            }
+
+            function loadLang() {
+                var r = new XMLHttpRequest();
+                var select;
+                
+                r.open("POST", "https://translate.yandex.net/api/v1.5/tr.json/getLangs?key=trnsl.1.1.20200511T090938Z.a2091658eab37745.cb2a304c184ba4f56f3f95c20f889db23f25b1a2&ui=en", true);
+                r.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var js = JSON.parse(this.responseText);
+                        var langs = js["langs"];
+                        
+                        Object.keys(langs).forEach(function(k) {
+                            var language = langs[k];
+                            var langcode = k;
+
+                            select = document.createElement("option");
+                            select.text = language;
+                            select.value = langcode;
+                            
+                            select2 = document.createElement("option");
+                            select2.text = language;
+                            select2.value = langcode;
+
+                            document.getElementById('start').appendChild(select);
+                            document.getElementById('end').appendChild(select2);
+                        });
+
+                        for (i = 0; i < document.getElementById('start').options.length; i++ ) {
+                            if (document.getElementById('start').options[i].innerHTML == "Italian") {
+                                document.getElementById('start').selectedIndex = i;
+                                break;
+                            }   
+                        }
+                        for (i = 0; i < document.getElementById('end').options.length; i++) {
+                            if (document.getElementById('end').options[i].innerHTML == "English") {
+                                document.getElementById('end').selectedIndex = i;
+                                break;
+                            }   
+                        }
+                    };
+                }
+                r.send();
+            }
+
+            function Traduci() {
+                var text = inputText.testo.value;
+                var linguaFrom = inputText.linguaFrom.value;
+                var linguaTo = inputText.linguaTo.value;
+
+                var url = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20200511T090938Z.a2091658eab37745.cb2a304c184ba4f56f3f95c20f889db23f25b1a2&text=" + text + "&lang=" + linguaFrom + "-" + linguaTo + "&format=html";
+
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("GET", url, true);
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var resp = JSON.parse(this.responseText);
+                        inputText.testoTradotto.value = resp.text;
+                    }
+                };
+                xhttp.send();
+            }
+
+            function getHTML() {
+                var link = "https://it.wikipedia.org/wiki/Ciao";
+                var url = "https://api.codetabs.com/v1/proxy?quest=" + link;
+
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("GET", url, true);
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        TraduciHTML(this.responseText);
+                    }
+                };
+                xhttp.send();
+            }
+
+            function createButton(href) {
+                link = document.createElement("a");
+                link.setAttribute("href", href);
+                link.setAttribute("class", "btn btn-primary");
+                link.setAttribute("role", "button");
+                link.setAttribute("target", "_blank");
+                link.innerHTML = "Traduzione";
+                document.getElementById("newHtml").appendChild(link);
+            }
+
+            function TraduciHTML(code) {
+                var test = inputHTML.link.value;
+                var linguaFrom = inputHTML.linguaFrom.value;
+                var linguaTo = inputHTML.linguaTo.value;
+
+                var url = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20200511T090938Z.a2091658eab37745.cb2a304c184ba4f56f3f95c20f889db23f25b1a2&text=" + code + "&lang=" + linguaFrom + "-" + linguaTo + "&format=html";
+
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("GET", url, true);
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var resp = JSON.parse(this.responseText);
+                        console.log(resp.text);
+                        // createButton("https://it.wikipedia.org/wiki/Ciao");
+                    }
+                };
+                xhttp.send();
+            }
+
+            function TraduciFile(text) {
+                var linguaFrom = inputFile.linguaFrom.value;
+                var linguaTo = inputFile.linguaTo.value;
+
+                var url = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20200511T090938Z.a2091658eab37745.cb2a304c184ba4f56f3f95c20f889db23f25b1a2&text=" + text + "&lang=" + linguaFrom + "-" + linguaTo + "&format=html";
+
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("GET", url, true);
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var resp = JSON.parse(this.responseText);
+                        inputFile.fileTradotto.value = resp.text;
+                    }
+                };
+                xhttp.send();
+            } 
+        </script>
+    </head>
+    <body class="bg-light" onload="loadLang()">
+        <h1 style="text-align: center;">Translate API</h1>
+        <br>
+        <div class="container col-sm-6 offset-sm-3">
+            <form name="inputText">
+                <h2 style="text-align: center;">Traduci del testo</h2>
+                <br>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group" style="float: right;">
+                            <select id="start" name="linguaFrom"></select>
+                        </div>
+                    </div>
+                    <div class="col-sm-4" style="text-align: center;">
+                        <img src="ok.png" alt="" style="width: 30px; height: 30px;" onclick="inverseLang('inputText')">
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group" style="float: left;">
+                            <select id="end" name="linguaTo"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <textarea class="form-control" rows="3" name="testo" placeholder="Inserisci il testo"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <textarea class="form-control" rows="3" name="testoTradotto" placeholder="Traduzione" readonly></textarea>
+                        </div>
+                    </div>
+                </div>
+                <button style="float: right" type="button" class="btn btn-primary" onclick="Traduci()">Traduci</button>
+            </form>
+            
+            <br><br><hr><br>
+
+            <form name="inputHTML">
+                <h2 style="text-align: center;">Traduci pagine HTML</h2>
+                <br>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group" style="float: right;">
+                            <select id="ciao" name="linguaFrom">
+                                <option value="it">Italiano</option>
+                                <option value="fr">Francese</option>
+                                <option value="en">Inglese</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-4" style="text-align: center;">
+                        <img src="ok.png" alt="" style="width: 30px; height: 30px;" onclick="inverseLang('inputHTML')">
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group" style="float: left;">
+                            <select name="linguaTo">
+                                <option value="en">Inglese</option>
+                                <option value="it">Italiano</option>
+                                <option value="fr">Francese</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <input type="text" style="text-align: center;" class="form-control" name="link" placeholder="Inserisci link">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group" id="newHtml" style="text-align: center;"></div>
+                    </div>
+                </div>
+                <button style="float: right" type="button" class="btn btn-primary" onclick="getHTML()">Traduci</button>
+            </form>
+
+            <br><br><hr><br>
+
+            <form name="inputFile">
+                <h2 style="text-align: center;">Traduci file</h2>
+                <br>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group" style="float: right;">
+                            <select name="linguaFrom">
+                                <option value="it">Italiano</option>
+                                <option value="fr">Francese</option>
+                                <option value="en">Inglese</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-4" style="text-align: center;">
+                        <img src="ok.png" alt="" style="width: 30px; height: 30px;" onclick="inverseLang('inputFile')">
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group" style="float: left;">
+                            <select name="linguaTo">
+                                <option value="en">Inglese</option>
+                                <option value="it">Italiano</option>
+                                <option value="fr">Francese</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6" style="text-align: center;">
+                        <div class="form-group">
+                            <input type="file" id="fileTest">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <textarea class="form-control" rows="3" name="fileTradotto" placeholder="Traduzione" readonly></textarea>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <br><br><hr>
+
+        </div>
+
+        <script>
+            document.getElementById('fileTest').addEventListener('change', function() {
+                var fr = new FileReader(); 
+                fr.onload = function() {
+                    TraduciFile(fr.result);
+                }
+                fr.readAsText(this.files[0]); 
+            });
+        </script>
+    </body>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</html>
