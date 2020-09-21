@@ -74,7 +74,7 @@
                 var linguaFrom = inputText.linguaFrom.value;
                 var linguaTo = inputText.linguaTo.value;
 
-                var url = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20200511T090938Z.a2091658eab37745.cb2a304c184ba4f56f3f95c20f889db23f25b1a2&text=" + text + "&lang=" + linguaFrom + "-" + linguaTo + "&format=html";
+                var url = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=key&text=" + text + "&lang=" + linguaFrom + "-" + linguaTo + "&format=html";
 
                 var xhttp = new XMLHttpRequest();
                 xhttp.open("GET", url, true);
@@ -116,8 +116,7 @@
                 var linguaFrom = inputHTML.linguaFrom.value;
                 var linguaTo = inputHTML.linguaTo.value;
 
-                var url = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20200511T090938Z.a2091658eab37745.cb2a304c184ba4f56f3f95c20f889db23f25b1a2&text=" + code + "&lang=" + linguaFrom + "-" + linguaTo + "&format=html";
-
+                var url = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=key&text=" + code + "&lang=" + linguaFrom + "-" + linguaTo + "&format=html";
                 var xhttp = new XMLHttpRequest();
                 xhttp.open("GET", url, true);
                 xhttp.onreadystatechange = function() {
@@ -134,8 +133,7 @@
                 var linguaFrom = inputFile.linguaFrom.value;
                 var linguaTo = inputFile.linguaTo.value;
 
-                var url = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20200511T090938Z.a2091658eab37745.cb2a304c184ba4f56f3f95c20f889db23f25b1a2&text=" + text + "&lang=" + linguaFrom + "-" + linguaTo + "&format=html";
-
+                var url = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=key&text=" + text + "&lang=" + linguaFrom + "-" + linguaTo + "&format=html";
                 var xhttp = new XMLHttpRequest();
                 xhttp.open("GET", url, true);
                 xhttp.onreadystatechange = function() {
